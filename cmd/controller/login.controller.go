@@ -19,7 +19,7 @@ import (
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param        login body models.LoginRequest true "Login data"
+// @Param        request body models.LoginRequest true "Login data"
 // @Success      200  {object} models.AuthResponse
 // @Failure      400  {object} models.Response
 // @Failure      500  {object} models.Response

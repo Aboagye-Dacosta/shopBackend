@@ -18,7 +18,7 @@ import (
 const User = entities.USER
 
 type UserService struct {
-	*models.UserModel
+	users *models.UserModel
 }
 
 func (s *UserService) GetAll(ctx context.Context) ([]*models.User, error) {
@@ -26,7 +26,7 @@ func (s *UserService) GetAll(ctx context.Context) ([]*models.User, error) {
 	defer cancel()
 	log := logger.FromContext(ctx)
 	var users []*models.User
-	if err := s.DB.WithContext(ctx).Preload("Roles").Preload("Orders").Find(&users).Error; err != nil {
+	if err := s.users.DB.WithContext(ctx).Preload("Roles").Preload("Orders").Find(&users).Error; err != nil {
 		log.ErrLogger.Error(err.Error(), "entity", User)
 		return nil, appErrors.FromDb(User, err)
 	}
@@ -39,7 +39,7 @@ func (s *UserService) GetById(ctx context.Context, id string) (*models.User, err
 	defer cancel()
 	log := logger.FromContext(ctx)
 	var user models.User
-	if err := s.DB.WithContext(ctx).Where("id=?", id).
+	if err := s.users.DB.WithContext(ctx).Where("id=?", id).
 		Preload("Roles.Permissions").
 		Preload("Roles").
 		First(&user).Error; err != nil {
@@ -57,7 +57,7 @@ func (s *UserService) Create(ctx context.Context, req *models.RegisterRequest) (
 	log := logger.FromContext(ctx)
 
 	var existing models.User
-	if err := s.DB.WithContext(ctx).
+	if err := s.users.DB.WithContext(ctx).
 		Select("id").
 		Where("email = ?", req.Email).
 		First(&existing).Error; err == nil {
@@ -78,12 +78,12 @@ func (s *UserService) Create(ctx context.Context, req *models.RegisterRequest) (
 		Password:  hashed,
 	}
 
-	if err := s.DB.WithContext(ctx).Create(&user).Error; err != nil {
+	if err := s.users.DB.WithContext(ctx).Create(&user).Error; err != nil {
 		return nil, appErrors.FromDb(User, err)
 	}
 
 	var role models.Role
-	if err := s.DB.WithContext(ctx).
+	if err := s.users.DB.WithContext(ctx).
 		Preload("Permissions").
 		Where("name = ?", "user").
 		First(&role).Error; err != nil {
@@ -93,11 +93,11 @@ func (s *UserService) Create(ctx context.Context, req *models.RegisterRequest) (
 		return nil, appErrors.FromDb(User, err)
 	}
 
-	if err := s.DB.WithContext(ctx).Model(&user).Association("Roles").Append(&role); err != nil {
+	if err := s.users.DB.WithContext(ctx).Model(&user).Association("Roles").Append(&role); err != nil {
 		return nil, appErrors.FromDb(User, err)
 	}
 
-	if err := s.DB.WithContext(ctx).
+	if err := s.users.DB.WithContext(ctx).
 		Preload("Roles.Permissions").
 		First(&user, "id = ?", user.ID).Error; err != nil {
 		return nil, appErrors.FromDb(User, err)
@@ -113,7 +113,7 @@ func (s *UserService) GetByEmail(ctx context.Context, email string) (*models.Use
 
 	log := logger.FromContext(ctx)
 	var user models.User
-	if err := s.DB.WithContext(ctx).
+	if err := s.users.DB.WithContext(ctx).
 		Where("email = ?", email).
 		Preload("Roles.Permissions").
 		Preload("Roles").

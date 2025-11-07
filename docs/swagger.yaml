@@ -198,6 +198,18 @@ definitions:
     required:
     - name
     type: object
+  models.RoleRequest:
+    properties:
+      permissions:
+        items:
+          type: string
+        type: array
+      role:
+        type: string
+    required:
+    - permissions
+    - role
+    type: object
   models.User:
     properties:
       activated_at:
@@ -231,17 +243,6 @@ definitions:
     - first_name
     - last_name
     type: object
-  models.UserResponse:
-    properties:
-      code:
-        type: integer
-      data:
-        $ref: '#/definitions/models.User'
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
 info:
   contact:
     email: dacostaaboagyesolomon@gmail.com
@@ -259,7 +260,7 @@ paths:
       parameters:
       - description: Login data
         in: body
-        name: login
+        name: request
         required: true
         schema:
           $ref: '#/definitions/models.LoginRequest'
@@ -336,10 +337,144 @@ paths:
       summary: Get system permissions
       tags:
       - Roles and Permissions
-  /api/v1/users:
-    get:
+  /api/v1/roles:
+    post:
       consumes:
       - application/json
+      description: Create a role with its permissions
+      parameters:
+      - description: Role id
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Role'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      security:
+      - BearerAuth: []
+      summary: Create role
+      tags:
+      - Roles and Permissions
+  /api/v1/roles/{id}:
+    delete:
+      description: Delete a role with its permissions
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete role
+      tags:
+      - Roles and Permissions
+    get:
+      description: Get all roles with their permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Role'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      security:
+      - BearerAuth: []
+      summary: Get roles
+      tags:
+      - Roles and Permissions
+    put:
+      consumes:
+      - application/json
+      description: Update a role with its permissions
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Role data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Role'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      security:
+      - BearerAuth: []
+      summary: Update role
+      tags:
+      - Roles and Permissions
+  /api/v1/users:
+    get:
       description: Get registered users
       produces:
       - application/json
@@ -347,7 +482,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.UserResponse'
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.User'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -376,7 +518,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.UserResponse'
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.User'
+              type: object
         "400":
           description: Bad Request
           schema:

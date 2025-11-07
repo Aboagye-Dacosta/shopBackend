@@ -102,6 +102,24 @@ var successRegistry = map[string]map[int]Message{
 			DevMessage:  "Permission entity deleted from database.",
 		},
 	},
+	entities.ROLE: {
+		http.StatusCreated: {
+			UserMessage: "Role created successfully.",
+			DevMessage:  "Role entity persisted to database.",
+		},
+		http.StatusOK: {
+			UserMessage: "Role details retrieved successfully.",
+			DevMessage:  "Role entity retrieved from DB.",
+		},
+		http.StatusAccepted: {
+			UserMessage: "Role updated successfully.",
+			DevMessage:  "Role entity updated in database.",
+		},
+		http.StatusNoContent: {
+			UserMessage: "Role deleted successfully.",
+			DevMessage:  "Role entity deleted from database.",
+		},
+	},
 }
 
 func Success(entity string, status int) string {

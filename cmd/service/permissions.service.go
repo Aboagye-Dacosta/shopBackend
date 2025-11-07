@@ -10,17 +10,17 @@ import (
 )
 
 type PermissionService struct {
-	*models.PermissionModel
+	permissions *models.PermissionModel
 }
 
-func (p *PermissionService) GetPermissions(ctx context.Context) ([]*models.Permission, error) {
+func (s *PermissionService) GetPermissions(ctx context.Context) ([]*models.Permission, error) {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
 	var permissions []*models.Permission
 
-	if err := p.DB.WithContext(ctx).Find(&permissions).Error; err != nil {
-		return nil, errors.FromDb(entities.PERMISSIONS,err)
+	if err := s.permissions.DB.WithContext(ctx).Find(&permissions).Error; err != nil {
+		return nil, errors.FromDb(entities.PERMISSIONS, err)
 	}
 
 	return permissions, nil

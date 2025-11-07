@@ -18,18 +18,21 @@ func SendResponse(w http.ResponseWriter, data *models.Response) error {
 	return json.NewEncoder(w).Encode(data)
 }
 
-func GenSuccessResponse(entity string, statusCode int, data interface{}) *models.Response {
+func GenSuccessResponse(entity string, messageCode int, data interface{}) *models.Response {
+	httpCode := messageCode
+	if httpCode == http.StatusNoContent || httpCode == http.StatusAccepted || httpCode == codes.LOGIN_SUCCESS {
+		httpCode = http.StatusOK
+	}
 
-	var messageCode = statusCode
-	if statusCode == http.StatusNoContent || statusCode == codes.LOGIN_SUCCESS {
-		statusCode = http.StatusOK
+	if httpCode == codes.ROLE_IN_USE {
+		httpCode = http.StatusConflict
 	}
 
 	return &models.Response{
 		Success: true,
 		Message: messages.Success(entity, messageCode),
 		Data:    data,
-		Code:    statusCode,
+		Code:    httpCode,
 	}
 }
 

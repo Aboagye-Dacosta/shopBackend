@@ -3,11 +3,12 @@ package models
 import "gorm.io/gorm"
 
 type Models struct {
-	Users    UserModel
-	Products ProductModel
-	Orders   OrderModel
-	Payments PaymentModel
-	Permissions PermissionModel
+	Users       *UserModel
+	Products    *ProductModel
+	Orders      *OrderModel
+	Payments    *PaymentModel
+	Permissions *PermissionModel
+	Roles       *RoleModel
 }
 
 type Response struct {
@@ -18,17 +19,18 @@ type Response struct {
 }
 
 type ErrResponse struct {
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
-	Code    int         `json:"code"`
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Code    int    `json:"code"`
 }
 
 func NewModel(db *gorm.DB) *Models {
 	return &Models{
-		Users:    UserModel{db},
-		Products: ProductModel{db},
-		Payments: PaymentModel{db},
-		Orders:   OrderModel{db},
-		Permissions: PermissionModel{db},
+		Users:       &UserModel{db},
+		Products:    &ProductModel{db},
+		Payments:    &PaymentModel{db},
+		Orders:      &OrderModel{db},
+		Permissions: &PermissionModel{db},
+		Roles:       &RoleModel{db},
 	}
 }

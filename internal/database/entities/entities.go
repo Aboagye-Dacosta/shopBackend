@@ -8,4 +8,5 @@ const (
 	AUTHORIZATION  = "authorization"
 	AUTHENTICATION = "authentication"
 	PERMISSIONS    = "permissions"
+	ROLE           = "role"
 )

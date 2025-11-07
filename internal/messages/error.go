@@ -95,6 +95,28 @@ var errorRegistry = map[string]map[int]Message{
 			DevMessage:  "User lacks required permission for this operation.",
 		},
 	},
+	entities.ROLE: {
+		http.StatusNotFound: {
+			UserMessage: "Role not found.",
+			DevMessage:  "Role ID not found in database.",
+		},
+		http.StatusConflict: {
+			UserMessage: "Role already exists.",
+			DevMessage:  "Duplicate role name or identifier constraint.",
+		},
+		http.StatusBadRequest: {
+			UserMessage: "Invalid role request.",
+			DevMessage:  "Role validation failed: invalid data or constraints.",
+		},
+		http.StatusForbidden: {
+			UserMessage: "You do not have permission to perform this action.",
+			DevMessage:  "User lacks required permission for role operation.",
+		},
+		codes.ROLE_IN_USE: {
+			UserMessage: "Role is in use and cannot be modified.",
+			DevMessage:  "Role operation blocked: role assigned to active users",
+		},
+	},
 }
 
 func Error(entity string, status int) string {

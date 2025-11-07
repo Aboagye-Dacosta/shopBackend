@@ -14,9 +14,8 @@ import (
 // @Description  Get registered users
 // @Tags         Users
 // @Security     BearerAuth
-// @Accept       json
 // @Produce      json
-// @Success      200  {object} models.UserResponse
+// @Success      200  {object} models.Response{data=[]models.User}
 // @Failure      400  {object} models.ErrResponse
 // @Failure      500  {object} models.ErrResponse
 // @Router       /api/v1/users [get]
@@ -55,7 +54,7 @@ func (c *Controller) HttpGetUsers(w http.ResponseWriter, r *http.Request) {
 // @Security     BearerAuth
 // @Produce      json
 // @Param        id   path      string  true  "User ID"
-// @Success      200  {object}  models.UserResponse
+// @Success      200  {object}  models.Response{data=models.User}
 // @Failure      400  {object}  models.ErrResponse
 // @Failure      500  {object}  models.ErrResponse
 // @Router       /api/v1/users/{id} [get]

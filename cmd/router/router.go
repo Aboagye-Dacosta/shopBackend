@@ -23,6 +23,7 @@ func InitRouter(c *controller.Controller, log *logger.AppLogger) *mux.Router {
 	appRouter.initializeUserRoutes(c)
 	appRouter.initializeRegisterRoutes(c)
 	appRouter.initializePermissionsRoutes(c)
+	appRouter.initializeRolesRoutes(c)
 	appRouter.initializeDocsRoute(root)
 
 	return root

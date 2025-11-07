@@ -11,6 +11,16 @@ type Role struct {
 	Permissions []Permission `gorm:"many2many:role_permissions;" json:"permissions,omitempty"`
 }
 
+type RoleRequest struct {
+	Role        string   `json:"role" validate:"required"`
+	Permissions []string `json:"permissions" validate:"required"`
+}
+
+type RoleResponse struct {
+	Response
+	Data Role
+}
+
 type Permission struct {
 	ID   string `gorm:"type:char(25);primaryKey" json:"id"`
 	Name string `gorm:"uniqueIndex;size:100;not null" json:"name" validate:"required,min=3,max=100"`
@@ -22,6 +32,10 @@ type PermissionsResponse struct {
 }
 
 type PermissionModel struct {
+	DB *gorm.DB
+}
+
+type RoleModel struct {
 	DB *gorm.DB
 }
 
