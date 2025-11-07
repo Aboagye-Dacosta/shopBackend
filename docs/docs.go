@@ -152,6 +152,56 @@ const docTemplate = `{
             }
         },
         "/api/v1/roles": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all roles with their permissions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Roles and Permissions"
+                ],
+                "summary": "Get roles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/models.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.Role"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -221,14 +271,23 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get all roles with their permissions",
+                "description": "Get a role with it permissions",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Roles and Permissions"
                 ],
-                "summary": "Get roles",
+                "summary": "Get role",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Role ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -241,10 +300,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/models.Role"
-                                            }
+                                            "$ref": "#/definitions/models.Role"
                                         }
                                     }
                                 }

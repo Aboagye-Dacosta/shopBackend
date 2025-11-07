@@ -338,6 +338,35 @@ paths:
       tags:
       - Roles and Permissions
   /api/v1/roles:
+    get:
+      description: Get all roles with their permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Role'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      security:
+      - BearerAuth: []
+      summary: Get roles
+      tags:
+      - Roles and Permissions
     post:
       consumes:
       - application/json
@@ -404,7 +433,13 @@ paths:
       tags:
       - Roles and Permissions
     get:
-      description: Get all roles with their permissions
+      description: Get a role with it permissions
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -415,9 +450,7 @@ paths:
             - $ref: '#/definitions/models.Response'
             - properties:
                 data:
-                  items:
-                    $ref: '#/definitions/models.Role'
-                  type: array
+                  $ref: '#/definitions/models.Role'
               type: object
         "400":
           description: Bad Request
@@ -429,7 +462,7 @@ paths:
             $ref: '#/definitions/models.ErrResponse'
       security:
       - BearerAuth: []
-      summary: Get roles
+      summary: Get role
       tags:
       - Roles and Permissions
     put:
